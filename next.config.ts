@@ -6,6 +6,7 @@ const nextConfig : NextConfig = {
 
     // 设置基本路径，这是你GitHub仓库的名称
     basePath: process.env.NODE_ENV === 'production' ? '/TEICHIMON.github.io' : '',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '/TEICHIMON.github.io' : '',
 
     // 禁用服务器端图像优化，因为静态导出不支持动态功能
     images: {
