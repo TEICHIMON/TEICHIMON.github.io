@@ -1,20 +1,61 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
+import createMDX from '@next/mdx'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import {remarkCodeHike, recmaCodeHike} from 'codehike/mdx'
+import remarkToc from 'remark-toc'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeKatex from'rehype-katex'
 
-const nextConfig : NextConfig = {
-    // 启用静态导出
-    output: "export",
 
-    // 设置基本路径，这是你GitHub仓库的名称
-    basePath: process.env.NODE_ENV === 'production' ? '' : '',
-    assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
-
-
-
-    // 禁用服务器端图像优化，因为静态导出不支持动态功能
+const nextConfig: NextConfig = {
+    pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+    reactStrictMode: false,
+    /* config options here */
+    distDir: 'dist',
+    output: 'export', // SPA
     images: {
         unoptimized: true,
     },
+    // trailingSlash: true,
+    typescript: {
+        ignoreBuildErrors: true,
+    },
+    eslint: {
+        ignoreDuringBuilds: true
+    }
 };
 
-export default nextConfig;
+const chConfig = {
+    components: {
+        inlineCode: 'InlineCode',
+        code: 'Code'
+    },
+}
 
+const autolinkHeadingOptions = {
+    behavior: 'append',
+    properties: {
+        className: ['anchor-link'],
+        title: 'Permalink to this heading',
+    },
+    content: {
+        type: 'element',
+        tagName: 'span',
+        properties: { className: ['anchor-icon'] },
+        children: [{ type: 'text', value: '#' }],
+    },
+}
+
+const withMDX = createMDX({
+    extension: /\.mdx?$/,
+    options: {
+        remarkPlugins: [remarkToc, remarkGfm, remarkMath, [remarkCodeHike, chConfig]],
+        recmaPlugins: [[recmaCodeHike, chConfig]],
+        rehypePlugins: [[rehypeSlug, [rehypeAutolinkHeadings, autolinkHeadingOptions]], rehypeKatex],
+        jsx: true
+    }
+})
+
+export default withMDX(nextConfig);
