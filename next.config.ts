@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
     reactStrictMode: false,
     /* config options here */
-    distDir: 'dist',
+    distDir: 'out',
     output: 'export', // SPA
     images: {
         unoptimized: true,
